@@ -4,6 +4,9 @@ import request from "request";
 import https from "https";
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
+import dotenv from "dotenv";
+dotenv.config();
+const apiKey = process.env.apiKey;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -14,7 +17,8 @@ app.use(express.static("public"));
 
 
 app.get("/", function(req,res){
-  res.sendFile(join(__dirname, "signup.html"));
+  res.sendFile(join(__dirname, "/frontend/index.html"));
+  console.log(req.body.fname);
 })
 
 app.post("/", function(req,res){
@@ -43,17 +47,17 @@ app.post("/", function(req,res){
 
   const options = {
     method: "POST",
-    auth: "sahilsri:11818dc03a18f7cd76216ee3015b7f75-us17"
+    auth: apiKey
   }
 
   const request = https.request(url, options, function(response){
 
     if(response.statusCode === 200){
-      res.sendFile(join(__dirname, "success.html"));
+      res.sendFile(join(__dirname, "./frontend/success.html"));
     }
 
     else{
-      res.sendFile(join(__dirname, "failure.html"));
+      res.sendFile(join(__dirname, "./frontend/failure.html"));
     }
     response.on("data", function(data){
       console.log(JSON.parse(data));
@@ -69,7 +73,7 @@ app.post("/", function(req,res){
 })
 
 
-app.post("/failure.html", function(req, res){
+app.post("./frontend/failure.html", function(req, res){
   res.redirect("/");
 })
 
@@ -79,9 +83,3 @@ app.post("/failure.html", function(req, res){
 app.listen(process.env.PORT || 3000, function(){
   console.log("Server is running at port 3000.")
 })
-
-
-
-
-// API Key: 60e9aeb38253ebede525820cb05530b1-us17
-// List ID: 4b284a54b4
